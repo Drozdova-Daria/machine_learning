@@ -15,33 +15,46 @@ tic_tac_toe <- function(data_rand, n, percent) {
   
   A_classifier <- naiveBayes(V10 ~ ., data = A_train)
   A_predicted <- predict(A_classifier, A_test)
-  table(A_predicted, A_test$V10)
+  t <- table(A_predicted, A_test$V10)
+  
+  return ((t[2] + t[3]) / (sum(t)))
 }
 
-spam_data <- function(spam, count) {
+spam_data <- function(spam, percent) {
+  count <- as.integer(dim(spam)[1] * percent)
   idx <- sample(1:dim(spam)[1], count)
   spamtrain <- spam[-idx, ]
-  print(dim(spamtrain))
   spamtest <- spam[idx, ]
   model <- naiveBayes(type ~ ., data = spamtrain)
   predict(model, spamtest)
-  table(predict(model, spamtest), spamtest$type)
+  t <- table(predict(model, spamtest), spamtest$type)
+  
+  return ((t[2] + t[3]) / (sum(t)))
 }
 
 # 1 
 tic_tac <- read.table("Tic_tac_toe.txt", sep = ",", stringsAsFactors = TRUE)
 n <- dim(tic_tac)[1]
+percent <- seq(0.1, 0.9, by = .1)
 set.seed(12345)
 A_rand <- tic_tac[ order(runif(n)), ]
-tic_tac_toe(A_rand, n, 0.8)
-tic_tac_toe(A_rand, n, 0.5)
-tic_tac_toe(A_rand, n, 0.2)
+y = list()
+for (x in percent) {
+  t <- tic_tac_toe(A_rand, n, x)
+  y[length(y) + 1] <- t
+}
+plot(percent, y, type = "o", xlab='Доля обучающих данных', ylab='Доля ошибочно классифицированных данных', col="blue")
+grid(10, 5)
 
 data(spam)
-print(dim(spam))
-spam_data(spam, 1000)
-spam_data(spam, 2300)
-spam_data(spam, 3000)
+y = list()
+for (x in percent) {
+  t <- spam_data(spam, x)
+  y[length(y) + 1] <- t
+}
+plot(percent, y, type = "o", xlab='Доля обучающих данных', ylab='Доля ошибочно классифицированных данных', col="blue")
+grid(10, 5)
+
 
 # 2
 
