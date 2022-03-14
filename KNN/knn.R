@@ -43,7 +43,7 @@ for (x in percent) {
   t <- tic_tac_toe(A_rand, n, x)
   y[length(y) + 1] <- t
 }
-plot(percent, y, type = "o", xlab='Äîëÿ îáó÷àþùèõ äàííûõ', ylab='Äîëÿ îøèáî÷íî êëàññèôèöèðîâàííûõ äàííûõ', col="blue")
+plot(percent, y, type = "o", xlab='Ã„Ã®Ã«Ã¿ Ã®Ã¡Ã³Ã·Ã Ã¾Ã¹Ã¨Ãµ Ã¤Ã Ã­Ã­Ã»Ãµ', ylab='Ã„Ã®Ã«Ã¿ Ã®Ã¸Ã¨Ã¡Ã®Ã·Ã­Ã® ÃªÃ«Ã Ã±Ã±Ã¨Ã´Ã¨Ã¶Ã¨Ã°Ã®Ã¢Ã Ã­Ã­Ã»Ãµ Ã¤Ã Ã­Ã­Ã»Ãµ', col="blue")
 grid(10, 5)
 
 data(spam)
@@ -52,7 +52,7 @@ for (x in percent) {
   t <- spam_data(spam, x)
   y[length(y) + 1] <- t
 }
-plot(percent, y, type = "o", xlab='Äîëÿ îáó÷àþùèõ äàííûõ', ylab='Äîëÿ îøèáî÷íî êëàññèôèöèðîâàííûõ äàííûõ', col="blue")
+plot(percent, y, type = "o", xlab='Ã„Ã®Ã«Ã¿ Ã®Ã¡Ã³Ã·Ã Ã¾Ã¹Ã¨Ãµ Ã¤Ã Ã­Ã­Ã»Ãµ', ylab='Ã„Ã®Ã«Ã¿ Ã®Ã¸Ã¨Ã¡Ã®Ã·Ã­Ã® ÃªÃ«Ã Ã±Ã±Ã¨Ã´Ã¨Ã¶Ã¨Ã°Ã®Ã¢Ã Ã­Ã­Ã»Ãµ Ã¤Ã Ã­Ã­Ã»Ãµ', col="blue")
 grid(10, 5)
 
 
@@ -98,6 +98,8 @@ train.kknn(formula = Colors ~ ., data = svm_data, kmax = 15, distance = 1, kerne
 # 4
 
 titanic.train <- read.csv(file = "train.csv", header = TRUE)
-titanic.test <- read.csv(file = "test.csv", header = TRUE)
-fit.kknn <- kknn(Sex ~ ., titanic.train, kmax = 15, distance = 1, kernel = c("triangular", "rectangular", "epanechnikov", "optimal"))
+test <- read.csv(file = "test.csv", header = TRUE)
+survived <- read.csv(file = 'gender_submission.csv', header = TRUE)
+titanic.test <- merge(survived, test)
+fit.kknn <- train.kknn(Survived ~ ., titanic.train)
 summary(fit.kknn)
