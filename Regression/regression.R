@@ -5,35 +5,42 @@ library(dplyr)
 library(datasets)
 library(TSstudio)
 library(timetk)
-
 # 1
 
 reg <- read.table("reglab1.txt", stringsAsFactors = TRUE, header = TRUE)
 
-reg.lm = lm(z ~., data = reg)
-reg.lm$coefficients
-summary(reg.lm)
+f_qr = lm(z ~., data = reg, method = 'qr')
+f_qr
+summary(f_qr)
 
-reg.lm = lm(z ~ x, data = reg)
-reg.lm$coefficients
-summary(reg.lm)
-
-reg.lm = lm(z ~ y, data = reg)
-reg.lm$coefficients
-summary(reg.lm)
+f_frame = lm(z ~., data = reg, method = 'model.frame')
+f_frame
+summary(f_frame)
 
 # 2
 
 reg2 <- read.table("reglab2.txt", stringsAsFactors = TRUE, header = TRUE)
+f <- lm(y ~ x1, reg2)
+s <- summary(f)
+sum(unlist(lapply(s$residuals, function(x) x^2)))
+
+for (i in 1:4) {
+  comb <- combn(c('x1', 'x2', 'x3', 'x4'), i)
+  for (j in 1:length(comb[1,])) {
+    assign(comb[,j], x1)
+    f <- lm(y ~ comb[,j], reg2)
+    
+  }
+}
+
 reg2.features <- colnames(reg2)[2:ncol(reg2)]
-reg2.features
-seq_along(reg2.features) %>% lapply(function(m = ? integer) {
+
+devnull <- seq_along(reg2.features) %>% lapply(function(m = ? integer) {
   combn(reg2.features, m) %>% apply(2, function(features_subset = ? character) {
     formula <- paste("y ~", paste(features_subset, collapse = " + "))
     reg2.lm <- lm(formula = formula, reg2)
     reg2.rss <- deviance(reg2.lm)
-    print(formula)
-    print(reg2.rss)
+    cat("formula:", formula, "rss:", round(reg2.rss, 2), "\n")
   })
 })
 
@@ -44,11 +51,15 @@ summary(reg2.lm)
 
 cygage <- read.table("cygage.txt", stringsAsFactors = TRUE, header = TRUE)
 c <- lm(calAge ~ Depth, cygage)  
-c$coefficients
+c
 summary(c)
 
 # 4
 data(longley)
+long <- lm(Employed ~., longley)
+long
+summary(long)
+
 new.longley <- longley[,-5]
 n <- dim(new.longley)[1]
 set.seed(123)
@@ -72,24 +83,25 @@ stocks <- as.data.frame(EuStockMarkets) %>%
   mutate(time = rep(time(EuStockMarkets), 4))
 plot_ly(stocks, x = ~time, y = ~price, color = ~index, mode = "lines")
 
-stocks.reg = lm(time ~ ., data = stocks)
-stocks.reg$coefficients
-
 stocks.CAC <- stocks[stocks$index == 'CAC', ]
 CAC.reg = lm(time ~ price, data = stocks.CAC)
-CAC.reg$coefficients
+CAC.reg
+summary(CAC.reg)
 
 stocks.DAX <- stocks[stocks$index == 'DAX', ]
 DAX.reg = lm(time ~ price, data = stocks.DAX)
-DAX.reg$coefficients
+DAX.reg
+summary(DAX.reg)
 
 stocks.FTSE <- stocks[stocks$index == 'FTSE', ]
 FTSE.reg = lm(time ~ price, data = stocks.FTSE)
-FTSE.reg$coefficients
+FTSE.reg
+summary(FTSE.reg)
 
 stocks.SMI <- stocks[stocks$index == 'SMI', ]
 SMI.reg = lm(time ~ price, data = stocks.SMI)
-SMI.reg$coefficients
+SMI.reg
+summary(SMI.reg)
 
 # 6
 
