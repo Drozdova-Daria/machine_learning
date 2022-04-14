@@ -140,4 +140,4 @@ svm6_stats$sd <- svm6_stats$epsilon %>% lapply(function(epsilon) {
   sd(svm6_predicted - svm6$Y)
 })
 
-plot(svm6_stats$epsilon, svm6_stats$sd, type = "o", xlab = 'epsilon', ylab = 'РЎСЂРµРґРЅСЏСЏ РѕС€РёР±РєР°')
+plot(svm6_stats$epsilon, svm6_stats$sd, type = "o", xlab = 'epsilon', ylab = 'Средняя ошибка')
